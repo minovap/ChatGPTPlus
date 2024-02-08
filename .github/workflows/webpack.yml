@@ -31,9 +31,9 @@ jobs:
       run: |
         npm install
         npm run build
-      # Ensure the './dist' directory exists after build
-      - name: Check dist directory
-        run: ls -la ./dist
+
+    - name: Check dist directory
+      run: ls -la ./dist
 
   deploy:
     needs: build
