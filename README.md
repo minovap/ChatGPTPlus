@@ -38,7 +38,8 @@ Enhance your ChatGPT interface with ChatGPTPlus . This project is dedicated to i
     // Append the script element to the document head (or body)
     document.head.appendChild(scriptElement); // You can also append to document.body if needed
 
-})();```
+})();
+```
 
 ### Development Setup
 
@@ -48,10 +49,13 @@ To set up this project for development, follow these steps:
 
 2. Navigate to the project directory and run the following command to install the dependencies:
    ```bash
-   npm install```
+   npm install
+   ```
 
 3. To start the development server, run:
-   ```npm run start```
+   ```bash
+   npm run start
+   ```
    This will serve your project at http://localhost:8080, and you should set the @resource URL in your Tampermonkey script to this address for local development.
 
 
@@ -60,6 +64,7 @@ To set up this project for development, follow these steps:
 When working in development mode, adjust your Tampermonkey script to load the local version of your enhancements:
 
 1. Change the @resource URL in your Tampermonkey script to point to your local server:
-```@resource REMOTE_JS http://localhost:8080/bundle.js
+```
+@resource REMOTE_JS http://localhost:8080/bundle.js
 ```
 2. In the Tampermonkey settings under Externals, set the Update Interval to “Always” to ensure Tampermonkey fetches the most recent version of your local script automatically.
