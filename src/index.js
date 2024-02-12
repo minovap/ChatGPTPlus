@@ -1,12 +1,24 @@
 import './styles.css';
+import { get, set } from './cache';
+
+const defaultSettings = {
+  submitOnEnter: false,
+  inputPosition: 'left',
+  monospaceInput: true,
+}
+
+function initializeSettings() {
+  Object.keys(defaultSettings).forEach(key => {
+    const settingValue = get(key, defaultSettings[key]);
+    set(key, settingValue);
+  });
+}
 
 
 (function () {
   'use strict';
-
-  let settings = {
-    submitOnEnter: false,
-  }
+  
+  initializeSettings();
 
   const injectSettings = () => {
     if (document.querySelector('#quick-settings')) {
@@ -29,9 +41,19 @@ import './styles.css';
     targetForm.insertAdjacentHTML('afterend', settingsHtml);
 
     // Attach event listeners to buttons
-    document.querySelector('#toggleMonospace').addEventListener('click', () => document.documentElement.classList.toggle('monospaced-message-form'));
+    if (get('monospaceInput')) {
+      document.documentElement.classList.add('monospaced-message-form');
+    }
+    document.querySelector('#toggleMonospace').addEventListener('click', () => {
+      set('monospaceInput', !get('monospaceInput'));
+      if (get('monospaceInput')) {
+        document.documentElement.classList.add('monospaced-message-form');
+      } else {
+        document.documentElement.classList.remove('monospaced-message-form');
+      }
+    });
 
-    const removeAllInputClasses = () => {
+    const setInputPosition = (position) => {
       // Get all classes from the <html> element
       const classes = document.documentElement.classList;
 
@@ -41,27 +63,29 @@ import './styles.css';
           document.documentElement.classList.remove(className);
         }
       });
+
+      document.documentElement.classList.toggle(`input-${position}`);
+      set('inputPosition', position);
     };
 
+    setInputPosition(get('inputPosition'));
+
     document.querySelector('#inputLeft').addEventListener('click', () => {
-      removeAllInputClasses();
-      document.documentElement.classList.toggle('input-left');
+      setInputPosition('left');
     });
 
     document.querySelector('#inputRight').addEventListener('click', () => {
-      removeAllInputClasses();
-      document.documentElement.classList.toggle('input-right');
+      setInputPosition('right');
     });
 
     document.querySelector('#inputBottom').addEventListener('click', () => {
-      removeAllInputClasses();
-      document.documentElement.classList.toggle('input-bottom');
+      setInputPosition('bottom');
     });
 
     document.querySelector('#submitOnEnter').addEventListener('click', () => {
-      settings.submitOnEnter = !settings.submitOnEnter;
+      set('submitOnEnter', !get('submitOnEnter'));
 
-      if (settings.submitOnEnter) {
+      if (get('submitOnEnter')) {
         document.querySelector('#submitOnEnter').textContent = "Submit On Enter Enabled"; 
       } else {
         document.querySelector('#submitOnEnter').textContent = "Submit On Enter Disabled"; 
@@ -80,7 +104,7 @@ import './styles.css';
     const elem = document.querySelector('#prompt-textarea');
     const key = Object.keys(elem).find(key => key.startsWith('__reactProps$'));
 
-    if (settings.submitOnEnter) {
+    if (get('submitOnEnter')) {
       return;
     }
 
@@ -104,5 +128,15 @@ import './styles.css';
       reactOnKeyDown(event);
     };
   }, 50);
-  console.log('Loaded JS!');
+
+  // Submit form 
+  //document.querySelector('[data-testid="send-button"]').click();
+
+  // Update form and submit
+  /*const elem = document.querySelector('#prompt-textarea');
+
+  if (elem) {
+      elem.value = 'What is your name?';
+      document.querySelector('[data-testid="send-button"]').click();
+  }*/
 })();
