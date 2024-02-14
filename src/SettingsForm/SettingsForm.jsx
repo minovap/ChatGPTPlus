@@ -46,6 +46,23 @@ function SettingsForm() {
     return { ...defaultSettings, ...storedSettings };
   });
 
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    // Define the event listener function
+    const toggleVisibility = () => {
+      setVisible((prevVisible) => !prevVisible);
+    };
+
+    // Attach the event listener to the document
+    document.addEventListener('toggleSettings', toggleVisibility);
+
+    // Return a cleanup function that removes the event listener
+    return () => {
+      document.removeEventListener('toggleSettings', toggleVisibility);
+    };
+  }, []); 
+
   // Effect for persisting state changes to localStorage
   useEffect(() => {
     setSettingsInLocalStorage(settings);
@@ -106,7 +123,7 @@ function SettingsForm() {
 
   // Render form
   return (
-    <div className="stretch mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl p-5">
+    <div className={`stretch mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl p-5 ${visible ? '' : 'hidden'}`}>
       <div className="border-b border-gray-900/10 pb-12">
         <div>
           {/* Monospace Toggle Section */}
