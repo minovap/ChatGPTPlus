@@ -1,0 +1,38 @@
+/* Change postition to left or right by seting the direction of the flex css */
+html.input-left div[role="presentation"] {
+  flex-direction: row-reverse !important;
+}
+
+html.input-right div[role="presentation"] {
+  flex-direction: row !important;
+}
+
+/* Set the width of the conversation window */
+html.input-left div[role="presentation"] > div:first-child,
+html.input-right div[role="presentation"] > div:first-child {
+  background-color: #f1f5f9; /* tailwind slate 100 */
+  width: 60% !important;
+}
+
+/* Set the width of the input box */
+html.input-right div[role="presentation"] > div:nth-child(2),
+html.input-left div[role="presentation"] > div:nth-child(2) {
+  background-color: #e2e8f0; /* tailwind slate 200 */
+  width: 40% !important;
+  max-width: 1200px !important;
+}
+
+html.input-right div[role="presentation"] > div:nth-child(2) > form,
+html.input-left div[role="presentation"] > div:nth-child(2) > form {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  max-width: 100% !important;
+}
+
+/* Allow text area to take upp the full height of the window */
+html.input-left #prompt-textarea,
+html.input-right #prompt-textarea {
+  max-height: calc(100vh - 150px) !important;
+  min-height: 200px;
+  padding: 14px 16px 50px 16px!important;
+}

@@ -12,7 +12,7 @@ module.exports = {
       directory: path.join(__dirname, 'public'),
     },
     port: 8080,
-    open: true,
+    open: false, // Disable auto-open browser window
     onListening: function (devServer) {
       if (!devServer) {
         throw new Error('webpack-dev-server is not defined');
@@ -27,7 +27,20 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
       }
     ]
   },
+  resolve: {
+    extensions: ['.js', '.jsx'] // Add .jsx extension
+  }
 };

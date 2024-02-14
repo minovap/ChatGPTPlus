@@ -2,38 +2,7 @@ iframe#webpack-dev-server-client-overlay{
     display:none!important;
 }
 
-[data-testid^="conversation-turn-"] > div > div {
-    width: 100% !important;
-    max-width: 100% !important;
-}
 
-html.input-left div[role="presentation"] {
-    flex-direction: row-reverse !important;
-}
-
-html.input-right div[role="presentation"] {
-    flex-direction: row !important;
-}
-
-/* Target the first direct div child */
-html.input-left div[role="presentation"] > div:first-child {
-    background-color: #f1f5f9; /* tailwind slate 100 */
-    width: 60% !important;
-}
-html.input-left div[role="presentation"] > div:nth-child(2) {
-    background-color: #e2e8f0; /* tailwind slate 200 */
-    width: 40% !important;
-}
-
-html.input-right div[role="presentation"] > div:first-child {
-    background-color: #f1f5f9; /* tailwind slate 100 */
-    width: 60% !important;
-}
-/* Target the second direct div child */
-html.input-right div[role="presentation"] > div:nth-child(2) {
-    background-color: #e2e8f0; /* tailwind slate 200 */
-    width: 40% !important;
-}
 
 html.dark div[role="presentation"] > div:first-child {
     background-color: #0c0c0c; 
@@ -54,14 +23,3 @@ div[role="presentation"] > div:nth-child(2) > form > div > div:not([class]) {
     display: none;
 }
 
-html.input-left div[role="presentation"] > div:nth-child(2) #prompt-textarea,
-html.input-right div[role="presentation"] > div:nth-child(2) #prompt-textarea {
-    max-height: calc(100vh - 150px) !important;
-    min-height: 200px;
-    padding: 14px 16px 50px 16px!important;
-}
-
-html.monospaced-message-form div[role="presentation"] > div:nth-child(2) #prompt-textarea {
-    font-family: Söhne Mono,Monaco,Andale Mono,Ubuntu Mono,monospace !important;
-    font-size: 14px;
-}

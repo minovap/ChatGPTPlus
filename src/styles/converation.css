@@ -1,0 +1,15 @@
+/* Make conversations take up the full width */
+[data-testid^="conversation-turn-"] > div > div {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+html.monospaced-conversation [data-testid^="conversation-turn-"] > div > div {
+  font-family: Söhne Mono,Monaco,Andale Mono,Ubuntu Mono,monospace !important;
+  font-size: 14px !important;
+}
+html.monospaced-conversation [data-testid^="conversation-turn-"] .prose {
+  font-size: 14px !important;
+}
+
+
