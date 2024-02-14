@@ -2,24 +2,16 @@ iframe#webpack-dev-server-client-overlay{
     display:none!important;
 }
 
-
-
-html.dark div[role="presentation"] > div:first-child {
-    background-color: #0c0c0c; 
-    width: 60% !important;
+html.dark #conversation-panel {
+    background-color: #0c0c0c !important; 
 }
 
-html.dark div[role="presentation"] > div:nth-child(2) {
-    background-color: #0f0f0f;
-    width: 40% !important;
-}
-
-div[role="presentation"] > div:nth-child(2) > form {
-    padding: 20px;
+html.dark #input-panel {
+    background-color: #0f0f0f !important;
 }
 
 /* Remove the help bubbles */
-div[role="presentation"] > div:nth-child(2) > form > div > div:not([class]) {
+#input-panel > form > div > div:not([class]) {
     display: none;
 }
 

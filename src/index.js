@@ -9,6 +9,45 @@ import { createRoot } from 'react-dom/client';
 
 (function () {
   'use strict';
+  const exists = (selector) => !!document.querySelector(selector);
+
+  setInterval(() => {
+    if (!exists('#id')) {
+      const root = document.querySelector('#__next > div');
+      root.id = 'root';
+    }
+
+    if (!exists('#sidebar-container') && exists('#root')) {
+      const root = document.querySelector('#root');
+      const sidebarContainer = root.children[0];
+      sidebarContainer.id = 'sidebar-container';
+    }
+
+    if (!exists('#main-container') && exists('#root')) {
+      const root = document.querySelector('#root');
+      const mainContainer = root.children[1].querySelector('[role="presentation"]');
+      mainContainer.id = 'main-content';
+    }
+
+    if (!exists('#sidebar-content') && exists('#sidebar-container')) {
+      const sidebarContainer = document.querySelector('#sidebar-container');
+      const sidebarNav = sidebarContainer.querySelector('nav');
+      sidebarNav.id = 'sidebar-content';
+    }
+
+    if (!exists('#input-panel') && exists('#main-content')) {
+      const mainContent = document.querySelector('#main-content');
+      const inputPanel = mainContent.children[1];
+      inputPanel.id = 'input-panel';
+    }
+    
+    if (!exists('#conversation-panel') && exists('#main-content')) {
+        const mainContent = document.querySelector('#main-content');
+        const conversationPanel = mainContent.children[0];
+        conversationPanel.id = 'conversation-panel';
+    }
+  }, 100);
+
   
   const injectSettingsForm = () => {
     if (document.querySelector('#settings-form-root')) {

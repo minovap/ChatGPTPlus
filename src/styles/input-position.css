@@ -1,29 +1,29 @@
 /* Change postition to left or right by seting the direction of the flex css */
-html.input-left div[role="presentation"] {
+html.input-left #main-content {
   flex-direction: row-reverse !important;
 }
 
-html.input-right div[role="presentation"] {
+html.input-right #main-content {
   flex-direction: row !important;
 }
 
 /* Set the width of the conversation window */
-html.input-left div[role="presentation"] > div:first-child,
-html.input-right div[role="presentation"] > div:first-child {
+html.input-left #conversation-panel,
+html.input-right #conversation-panel {
   background-color: #f1f5f9; /* tailwind slate 100 */
   width: 60% !important;
 }
 
 /* Set the width of the input box */
-html.input-right div[role="presentation"] > div:nth-child(2),
-html.input-left div[role="presentation"] > div:nth-child(2) {
+html.input-right #input-panel,
+html.input-left #input-panel {
   background-color: #e2e8f0; /* tailwind slate 200 */
   width: 40% !important;
   max-width: 1200px !important;
 }
 
-html.input-right div[role="presentation"] > div:nth-child(2) > form,
-html.input-left div[role="presentation"] > div:nth-child(2) > form {
+html.input-right #input-panel > form,
+html.input-left #input-panel > form {
   margin-left: 0px !important;
   margin-right: 0px !important;
   max-width: 100% !important;
