@@ -46,6 +46,11 @@ import { createRoot } from 'react-dom/client';
         const conversationPanel = mainContent.children[0];
         conversationPanel.id = 'conversation-panel';
     }
+
+    if (!exists('#sidebar-handle') && exists('#root')) {
+        const sidebarHandle = document.querySelector('#root main > div');
+        sidebarHandle.id = 'sidebar-handle';
+    }
   }, 100);
 
   
