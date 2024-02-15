@@ -26,6 +26,7 @@ function PromptInput() {
   
     // Wrap selected text with reference tag
     const selectedText = editor.getSelectedText();
+    if (selectedText.length === 0) return;
     const range = editor.getSelectionRange();
     const wrapText = `/* Ref ${nextRefNumber} >>> */${selectedText}/* <<< Ref ${nextRefNumber} */`;
     editor.session.replace(range, wrapText);
@@ -90,6 +91,7 @@ function PromptInput() {
         minLines={5}
         maxLines={maxLines}
         wrapEnabled={true}
+        setOptions={{ useWorker: false }}
       />
     </>
   );

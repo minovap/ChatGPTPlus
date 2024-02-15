@@ -6,12 +6,13 @@ import SettingsForm from './SettingsForm/SettingsForm';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import PromptInput from './PromptInput/PromptInput';
+import 'ace-builds/src-noconflict/theme-monokai.js'
 
 (function () {
   'use strict';
   const exists = (selector) => !!document.querySelector(selector);
 
-  setInterval(() => {
+  const addInjections = () => {
     if (!exists('#id')) {
       const root = document.querySelector('#__next > div');
       root.id = 'root';
@@ -142,6 +143,67 @@ import PromptInput from './PromptInput/PromptInput';
         document.dispatchEvent(new CustomEvent('wrapTextWithTags', {}));
       };
     }
+  };
+  setInterval(addInjections, 1000);
+  addInjections();
+
+  // Function to generate a random ID for an editor
+  function generateRandomEditorId() {
+    const randomNumber = Math.floor(Math.random() * 1000000000); // Generate a random number up to 9 digits
+    return `editor${randomNumber}`;
+  }
+
+  setInterval(() => {
+    // Query all elements with the specified data attribute and without the 'injected' class
+    const elements = document.querySelectorAll('[data-message-author-role="user"]:not(.injected)');
+  
+    elements.forEach(element => {
+      // Generate a random ID for the editor
+      const editorId = generateRandomEditorId();
+  
+      // Find the last div within the element
+      const divs = element.querySelectorAll('div');
+
+      const lastDiv = divs[divs.length - 1]; // Select the last div
+      if (lastDiv) {
+        lastDiv.id = editorId;
+        const content = lastDiv.textContent;
+  
+        // Adjust the style of the lastDiv to ensure it can host the Ace editor properly
+        lastDiv.style.width = '100%';
+        lastDiv.style.paddingTop = '10px'; // Example padding, adjust as needed
+        lastDiv.style.paddingBottom = '10px'; // Example padding, adjust as needed
+        lastDiv.className += ' border border-token-border-heavy rounded-md';
+  
+        // Estimate the height based on the content
+        const lineHeight = 16; // Height in pixels per line of text
+        const lines = 1 + content.split('\n').length || 1; // Adjusted to consider content properly
+        const calculatedHeight = `${lines * lineHeight}px`;
+        lastDiv.style.height = calculatedHeight;
+  
+        // Initialize Ace editor on this div
+        const editor = ace.edit(editorId, {
+          useWorker: false,
+        });
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/javascript");
+        editor.setValue(content);
+        editor.setReadOnly(true);
+        editor.clearSelection(); // Ensure text is not selected
+        editor.setHighlightActiveLine(false); // Adjust based on your needs
+        editor.setPrintMarginColumn(false); // Hide the print margin
+        editor.renderer.$cursorLayer.element.style.display = "none"; // Hide the cursor
+  
+        // After setting the value, adjust the editor's size to fit the content
+        editor.container.style.height = calculatedHeight;
+        editor.container.style.width = '100%'; // Ensure the editor fills the container width
+        editor.resize(true); // Adjust the editor to the size of its container
+  
+        // Mark the element as processed
+        element.classList.add('injected');
+      }
+    });
   }, 100);
+   
 
 })();
