@@ -129,7 +129,6 @@ function SettingsForm() {
         <div>
           {/* Monospace Toggle Section */}
           <fieldset>
-            <div onClick={() => {setPromptText('Hi how are you? I am fine thank you.'); submitPrompt(); }}>test text submit</div>
             <Checkbox
               id="monospaceInput"
               label="Monospace Prompt Input"
