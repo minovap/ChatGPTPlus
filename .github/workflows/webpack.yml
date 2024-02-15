@@ -35,6 +35,10 @@ jobs:
     - name: Check dist directory
       run: ls -la ./dist
 
+    - name: Generate latest commit file
+      run: echo "LATEST_COMMIT=$(git rev-parse HEAD)" > ./dist/latest-commit.txt
+      shell: bash
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
