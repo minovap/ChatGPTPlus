@@ -15,8 +15,7 @@ html.dark #input-panel {
     display: none;
 }
 
-html.input-bottom #promt-area-bottom-background-1,
-html.input-bottom #promt-area-bottom-background-2 {
+html.input-bottom #prompt-input-root {
     display: none;
 }
 
@@ -24,8 +23,16 @@ html.input-bottom #promt-area-bottom-background-2 {
 html.input-right #file-attach-button,
 html.input-left #file-attach-button {
     left: 0.55rem !important;
+    bottom: 0.85rem !important;
 }
 html.input-right #prompt-textarea,
 html.input-left #prompt-textarea {
     display: none;
+}
+
+#prompt-input-root {
+    border-bottom: 1px solid #ccc; /* Subtle gray line */
+    margin-bottom: 50px;
+    padding-bottom: 8px;
+    padding-top: 16px;
 }

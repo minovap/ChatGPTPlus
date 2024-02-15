@@ -15,30 +15,41 @@ Enhance your ChatGPT interface with ChatGPTPlus . This project is dedicated to i
 
 ```javascript
 // ==UserScript==
-// @name         ChatGPTPlus 
+// @name         ChatGPTPlus
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Enhance the ChatGPT interface
-// @author       https://github.com/minovap/ChatGPTPlus
+// @author       User's GitHub or Author Name
 // @match        *://chat.openai.com/*
-// @resource     REMOTE_JS https://minovap.github.io/ChatGPTPlus/bundle.js
-// @grant        GM_getResourceText
+// @grant        GM_addElement
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Fetch the script text using GM_getResourceText
-    const myJs = GM_getResourceText("REMOTE_JS");
+    // Define the URLs for the local and fallback scripts
+    const localScriptUrl = 'http://localhost:8080/bundle.js';
+    const fallbackScriptUrl = 'https://minovap.github.io/ChatGPTPlus/bundle.js';
 
-    // Create a new script element
-    const scriptElement = document.createElement('script');
-    scriptElement.textContent = myJs; // Set the script content to myJs
+    // Attempt to load the local development script
+    const localScriptTag = GM_addElement('script', { src: localScriptUrl });
 
-    // Append the script element to the document head (or body)
-    document.head.appendChild(scriptElement); // You can also append to document.body if needed
+    localScriptTag.addEventListener('load', () => {
+        console.log('✅ Development script loaded successfully.');
+    });
 
+    localScriptTag.addEventListener('error', () => {
+        // Load the production script as fallback
+        const fallbackScriptTag = GM_addElement('script', { src: fallbackScriptUrl });
+        fallbackScriptTag.addEventListener('load', () => {
+            console.log('✅ Production script loaded successfully.');
+        });
+        fallbackScriptTag.addEventListener('error', () => {
+            console.error('❌ Failed to load development and production scripts.');
+        });
+    });
 })();
+
 ```
 
 ### Development Setup
