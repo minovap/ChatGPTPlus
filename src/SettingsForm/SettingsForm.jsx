@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { setSettingsInLocalStorage, getSettingsFromLocalStorage } from './settings';
 import Checkbox from './Form/Checkbox';
 import Dropdown from './Form/Dropdown';
+import { setPromptText, submitPrompt } from '../utils/interactions';
 
 const defaultSettings = {
   submitOnEnter: false,
@@ -128,9 +129,10 @@ function SettingsForm() {
         <div>
           {/* Monospace Toggle Section */}
           <fieldset>
+            <div onClick={() => {setPromptText('Hi how are you? I am fine thank you.'); submitPrompt(); }}>test text submit</div>
             <Checkbox
               id="monospaceInput"
-              label="Monospace Font"
+              label="Monospace Prompt Input"
               checked={settings.monospaceInput}
               onChange={(checked) => handleChange('monospaceInput', checked)}
               description="Make input use monospace font."

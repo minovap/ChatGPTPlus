@@ -15,3 +15,17 @@ html.dark #input-panel {
     display: none;
 }
 
+html.input-bottom #promt-area-bottom-background-1,
+html.input-bottom #promt-area-bottom-background-2 {
+    display: none;
+}
+
+
+html.input-right #file-attach-button,
+html.input-left #file-attach-button {
+    left: 0.55rem !important;
+}
+html.input-right #prompt-textarea,
+html.input-left #prompt-textarea {
+    display: none;
+}
