@@ -28,17 +28,29 @@ function PromptInput() {
     const instructionsEditor = instructionsEditorRef.current.editor;
     const entireContent = codeEditor.getValue();
     let nextRefNumber = 1;
-
+  
     while (entireContent.includes(`Ref ${nextRefNumber}`)) {
       nextRefNumber++;
     }
-
-    const selectedText = codeEditor.getSelectedText();
-    if (selectedText.length === 0) return;
-    const range = codeEditor.getSelectionRange();
+  
+    let selectedText = codeEditor.getSelectedText();
+    let range = codeEditor.getSelectionRange();
+    
+    // If no text is selected, adjust to select the whole line(s)
+    if (selectedText.length === 0) {
+      const startRow = range.start.row;
+      const endRow = range.end.row;
+      const lineStart = codeEditor.session.getDocument().getLine(startRow);
+      const lineEnd = codeEditor.session.getDocument().getLine(endRow);
+      
+      range.start.column = 0; // Start of the start line
+      range.end.column = lineEnd.length; // End of the end line
+      selectedText = codeEditor.session.getTextRange(range); // Update selectedText to the whole line(s)
+    }
+  
     const wrapText = `/* Ref ${nextRefNumber} >>> */${selectedText}/* <<< Ref ${nextRefNumber} */`;
     codeEditor.session.replace(range, wrapText);
-
+  
     const referenceDefinition = `\n[Ref ${nextRefNumber}]`;
     instructionsEditor.session.insert({
       row: instructionsEditor.session.getLength(),
