@@ -6,7 +6,7 @@ import SettingsForm from './SettingsForm/SettingsForm';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import PromptInput from './PromptInput/PromptInput';
-import 'ace-builds/src-noconflict/theme-monokai.js'
+import 'ace-builds/src-noconflict/theme-chrome.js'
 
 (function () {
   'use strict';
@@ -162,34 +162,66 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
     const elements = document.querySelectorAll('[data-message-author-role="user"]:not(.injected)');
   
     elements.forEach(element => {
+      let textContent = element.textContent;
+
+      const hintPattern = /<<<HINT>>>[\s\S]*?<<<\/HINT>>>/g;
+      textContent = textContent.replace(hintPattern, '').trim();
+
+      const myCodePattern = /<<<MY_CODE>>>([\s\S]*?)<<<\/MY_CODE>>>([\s\S]*)/;
+      const match = myCodePattern.exec(textContent);
+    
+      if (match) {
+        // Extracted code snippet and text after the code snippet
+        const codeSnippet = match[1].trim();
+        const textAfterCode = match[2].trim();
+
+        // Clear the existing content of the element
+        element.innerHTML = '';
+
+        // Create a new div for the code snippet
+        const codeDiv = document.createElement('div');
+        codeDiv.textContent = codeSnippet;
+        codeDiv.className = 'code-snippet';
+
+        // Create a new div for the text after the code snippet
+        const textDiv = document.createElement('div');
+        textDiv.textContent = textAfterCode;
+
+        // Append both divs to the original element
+        element.appendChild(codeDiv);
+        element.appendChild(textDiv);
+
+        // Mark the element as processed
+        element.classList.add('injected');
+      }
+
       // Generate a random ID for the editor
       const editorId = generateRandomEditorId();
   
       // Find the last div within the element
-      const divs = element.querySelectorAll('div');
+      const codeDiv = element.querySelector('.code-snippet'); // Select the code div using its class
 
-      const lastDiv = divs[divs.length - 1]; // Select the last div
-      if (lastDiv) {
-        lastDiv.id = editorId;
-        const content = "\n" + lastDiv.textContent + "\n";
+      if (codeDiv) {
+        codeDiv.id = editorId;
+        const content = "\n" + codeDiv.textContent + "\n";
   
-        // Adjust the style of the lastDiv to ensure it can host the Ace editor properly
-        lastDiv.style.width = '100%';
-        lastDiv.style.paddingTop = '10px'; // Example padding, adjust as needed
-        lastDiv.style.paddingBottom = '10px'; // Example padding, adjust as needed
-        lastDiv.className += ' border border-token-border-heavy rounded-md';
+        // Adjust the style of the codeDiv to ensure it can host the Ace editor properly
+        codeDiv.style.width = '100%';
+        codeDiv.style.paddingTop = '10px'; // Example padding, adjust as needed
+        codeDiv.style.paddingBottom = '10px'; // Example padding, adjust as needed
+        codeDiv.className += ' border border-token-border-heavy rounded-md';
   
         // Estimate the height based on the content
         const lineHeight = 16; // Height in pixels per line of text
         const lines = content.split('\n').length || 1; // Adjusted to consider content properly
         const calculatedHeight = `${10 + lines * lineHeight}px`;
-        lastDiv.style.height = calculatedHeight;
+        codeDiv.style.height = calculatedHeight;
   
         // Initialize Ace editor on this div
         const editor = ace.edit(editorId, {
           useWorker: false,
         });
-        editor.setTheme("ace/theme/monokai");
+        editor.setTheme("ace/theme/chrome");
         editor.session.setMode("ace/mode/javascript");
         editor.setValue(content);
         editor.setReadOnly(true);

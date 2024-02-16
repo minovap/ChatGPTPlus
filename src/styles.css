@@ -37,10 +37,13 @@ html.input-left #prompt-textarea {
     padding-top: 16px;
 }
 
-.ace_gutter {
+[data-message-author-role="user"] .ace_gutter {
     width: 10px !important;
-    background-color: none !important;
+    background-color: transparent !important;
 }
-.ace_scroller {
+[data-message-author-role="user"] .ace_scroller {
     left: 10px !important;
+}
+[data-message-author-role="user"] .ace_print-margin {
+    visibility: hidden !important;
 }

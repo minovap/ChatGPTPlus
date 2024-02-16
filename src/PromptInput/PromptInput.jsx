@@ -9,36 +9,99 @@ import "ace-builds/src-noconflict/ext-language_tools";
 
 function PromptInput() {
   const [maxLines, setMaxLines] = useState(calculateMaxLines());
-  const editorRef = React.useRef(null); // Create a ref for the AceEditor
 
+  const [codeContent, setCodeContent] = useState('');
+  const [instructionsContent, setInstructionsContent] = useState('');
+  const [hintContent, setHintContent] = useState('');
+
+  const thisComponentRef = React.useRef(null);
+  const instructionsEditorRef = React.useRef(null);
+  const hintEditorRef = React.useRef(null);
+  
+  const codeEditorRef = React.useRef(null);
+
+  const halfMaxLines = Math.round(maxLines / 2);
 
   const wrapTextWithTagsHandler = () => {
-    const editor = editorRef.current.editor;
-    const entireContent = editor.getValue(); // Get entire content
-    let nextRefNumber = 1; // Start checking from Ref 1
-  
-    // Loop to find the first unused reference number
+    const codeEditor = codeEditorRef.current.editor;
+    const instructionsEditor = instructionsEditorRef.current.editor;
+    const entireContent = codeEditor.getValue();
+    let nextRefNumber = 1;
+
     while (entireContent.includes(`Ref ${nextRefNumber}`)) {
-      nextRefNumber++; // Increment if "Ref n" is found
+      nextRefNumber++;
     }
-  
-    // Now nextRefNumber is the first unused reference number
-  
-    // Wrap selected text with reference tag
-    const selectedText = editor.getSelectedText();
+
+    const selectedText = codeEditor.getSelectedText();
     if (selectedText.length === 0) return;
-    const range = editor.getSelectionRange();
+    const range = codeEditor.getSelectionRange();
     const wrapText = `/* Ref ${nextRefNumber} >>> */${selectedText}/* <<< Ref ${nextRefNumber} */`;
-    editor.session.replace(range, wrapText);
-  
-    // Append the reference definition at the end
-    const referenceDefinition = `[Ref ${nextRefNumber}]`;
-    editor.session.insert({
-      row: editor.session.getLength(),
+    codeEditor.session.replace(range, wrapText);
+
+    const referenceDefinition = `\n[Ref ${nextRefNumber}]`;
+    instructionsEditor.session.insert({
+      row: instructionsEditor.session.getLength(),
       column: 0
     }, referenceDefinition);
   };
+
+  const clearEditors = () => {
+    setCodeContent('');
+    setInstructionsContent('');
+    try {
+      codeEditorRef.setValue('');
+      instructionsEditorRef.setValue('');
+    } catch (e) {
+
+    }
+  }
+
+  const handleCombinedSubmit = () => {
+    submitPrompt();
+    clearEditors();
+  };
+
+  useEffect(() => {
+    // Assuming instructionsEditorRef is attached to an input, textarea, or other form element
+    console.log(thisComponentRef);
+    const formElement = thisComponentRef.current.closest('form');
+    
+    const handleSubmit = (event) => {
+      // Prevent the default form submit action
+      event.preventDefault();
+      
+      // Handle the form submission here
+      console.log('Form submitted!');
+      clearEditors();
+    };
   
+    // Add submit event listener if the form element is found
+    if (formElement) {
+      formElement.addEventListener('submit', handleSubmit);
+    }
+  
+    // Remove the event listener on cleanup
+    return () => {
+      if (formElement) {
+        formElement.removeEventListener('submit', handleSubmit);
+      }
+    };
+  }, []); 
+
+  useEffect(() => {
+    let combinedContent = '';
+    if (codeContent !== '') {
+      combinedContent += `<<<MY_CODE>>>\n\n${codeContent}\n\n<<</MY_CODE>>>\n`;
+    }
+
+    combinedContent += instructionsContent;
+    
+    if (hintContent !== '') {
+      combinedContent += `\n\n<<<HINT>>>\n${hintContent}\n<<</HINT>>>`;
+    }
+
+    setPromptText(combinedContent);
+  }, [codeContent, instructionsContent, hintContent]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,34 +129,86 @@ function PromptInput() {
   }
 
   return (
-    <>
+    <div ref={thisComponentRef}>
+      <div className="header p-2 bg-gray-100 text-gray-800">Code</div>
       <AceEditor
         mode="javascript"
-        theme="tomorrow"
-        onChange={(newValue) => setPromptText(newValue)}
+        theme="chrome"
+        value={codeContent}
+        onChange={(newValue) => { setCodeContent(newValue); }}
+        ref={codeEditorRef}
+        name="code_editor"
+        editorProps={{ $blockScrolling: true }}
+        width="100%"
+        minLines={5}
+        maxLines={halfMaxLines}
+        wrapEnabled={true}
+        showPrintMargin={false}
+        setOptions={{ useWorker: false }}
         commands={[
           {
             name: 'submitPromptCommand',
             bindKey: { win: 'Ctrl-Enter', mac: 'Ctrl-Enter' },
-            exec: (editor) => {
-              submitPrompt();
-              editor.setValue("");
+            exec: () => {
+              handleCombinedSubmit();
             },
             readOnly: false
           }
         ]}
-        ref={editorRef} // Attach the ref to the AceEditor
-        name="UNIQUE_ID_OF_DIV"
+      />
+      <div className="header p-2 bg-gray-100 text-gray-800 mt-4">Instructions</div>
+      <AceEditor
+        mode="javascript"
+        theme="chrome"
+        value={instructionsContent}
+        onChange={(newValue) => { setInstructionsContent(newValue); }}
+        ref={instructionsEditorRef}
+        name="instructions_editor"
         editorProps={{ $blockScrolling: true }}
         width="100%"
-        style={{ zIndex: 0 }}
-        showPrintMargin={false}
         minLines={5}
-        maxLines={maxLines}
+        maxLines={halfMaxLines}
         wrapEnabled={true}
+        showPrintMargin={false}
         setOptions={{ useWorker: false }}
+        commands={[
+          {
+            name: 'submitPromptCommand',
+            bindKey: { win: 'Ctrl-Enter', mac: 'Ctrl-Enter' },
+            exec: () => {
+              handleCombinedSubmit();
+            },
+            readOnly: false
+          }
+        ]}
       />
-    </>
+      <div className="header p-2 bg-gray-100 text-gray-800 mt-4">Hint</div>
+      <AceEditor
+        mode="javascript"
+        theme="chrome"
+        value={hintContent}
+        onChange={(newValue) => { setHintContent(newValue); }}
+        ref={hintEditorRef}
+        name="hint_editor"
+        editorProps={{ $blockScrolling: true }}
+        width="100%"
+        minLines={2}
+        maxLines={halfMaxLines}
+        wrapEnabled={true}
+        showPrintMargin={false}
+        setOptions={{ useWorker: false }}
+        commands={[
+          {
+            name: 'submitPromptCommand',
+            bindKey: { win: 'Ctrl-Enter', mac: 'Ctrl-Enter' },
+            exec: () => {
+              handleCombinedSubmit();
+            },
+            readOnly: false
+          }
+        ]}
+      />
+    </div>
   );
 }
 
