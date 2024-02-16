@@ -36,3 +36,11 @@ html.input-left #prompt-textarea {
     padding-bottom: 8px;
     padding-top: 16px;
 }
+
+.ace_gutter {
+    width: 10px !important;
+    background-color: none !important;
+}
+.ace_scroller {
+    left: 10px !important;
+}

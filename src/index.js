@@ -62,6 +62,7 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
         root.render(<SettingsForm />); 
     }
 
+    // Add id to file-attach-button
     if (!exists('#file-attach-button') && exists('#prompt-textarea')) {
       // Find the #prompt-textarea element
       const promptTextarea = document.querySelector('#prompt-textarea');
@@ -94,6 +95,7 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
     }
 
 
+    // add custom input box and add settings button
     if (!exists('#settings-button') && exists('#prompt-textarea')) {
       const buttonHTML = `
         <div id="settings-button" onclick="toggleSettingsVisibility()" style="left: 2.5rem; right: auto" class="cursor-pointer absolute bottom-1.5 p-0.5 text-white transition-colors enabled:bg-black disabled:text-gray-400 disabled:opacity-10 dark:border-white dark:bg-white dark:hover:bg-white md:bottom-3 md:right-3">
@@ -122,9 +124,10 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
     }
 
 
-    if (!exists('#settings-button2') && exists('#prompt-textarea')) {
+    // add reference and wrap text button
+    if (!exists('#wrap-text-button') && exists('#prompt-textarea')) {
       const buttonHTML = `
-        <div id="settings-button2" onclick="toggleSettingsVisibility()" style="left: 4.7rem; right: auto" class="cursor-pointer absolute bottom-1.5 p-0.5 text-white transition-colors enabled:bg-black disabled:text-gray-400 disabled:opacity-10 dark:border-white dark:bg-white dark:hover:bg-white md:bottom-3 md:right-3">
+        <div id="wrap-text-button" onclick="toggleSettingsVisibility()" style="left: 4.7rem; right: auto" class="cursor-pointer absolute bottom-1.5 p-0.5 text-white transition-colors enabled:bg-black disabled:text-gray-400 disabled:opacity-10 dark:border-white dark:bg-white dark:hover:bg-white md:bottom-3 md:right-3">
           <span data-state="closed">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: black;">
               <path d="M7.90451 6.92144C8.41341 6.45495 8.44779 5.66424 7.9813 5.15534C7.51481 4.64645 6.7241 4.61207 6.2152 5.07856L7.90451 6.92144ZM1.46194 11.1314L2.3066 12.0529L2.3066 12.0529L1.46194 11.1314ZM1.46194 11.8686L2.3066 10.9471L2.3066 10.9471L1.46194 11.8686ZM6.2152 17.9214C6.7241 18.3879 7.51481 18.3536 7.9813 17.8447C8.44779 17.3358 8.41341 16.545 7.90451 16.0786L6.2152 17.9214ZM6.2152 5.07856L0.617287 10.21L2.3066 12.0529L7.90451 6.92144L6.2152 5.07856ZM0.617287 12.79L6.2152 17.9214L7.90451 16.0786L2.3066 10.9471L0.617287 12.79ZM0.617287 10.21C-0.139356 10.9036 -0.139356 12.0964 0.617287 12.79L2.3066 10.9471C2.63087 11.2444 2.63087 11.7556 2.3066 12.0529L0.617287 10.21Z" fill="#000000"/>
@@ -138,7 +141,7 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
       const targetForm = document.querySelector('#prompt-textarea');
       targetForm.insertAdjacentHTML('afterend', buttonHTML);
   
-      const settingsButton = document.querySelector('#settings-button2');
+      const settingsButton = document.querySelector('#wrap-text-button');
       settingsButton.onclick = function() {
         document.dispatchEvent(new CustomEvent('wrapTextWithTags', {}));
       };
@@ -153,6 +156,7 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
     return `editor${randomNumber}`;
   }
 
+  // fix formatting of user messages in conversation
   setInterval(() => {
     // Query all elements with the specified data attribute and without the 'injected' class
     const elements = document.querySelectorAll('[data-message-author-role="user"]:not(.injected)');
@@ -167,7 +171,7 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
       const lastDiv = divs[divs.length - 1]; // Select the last div
       if (lastDiv) {
         lastDiv.id = editorId;
-        const content = lastDiv.textContent;
+        const content = "\n" + lastDiv.textContent + "\n";
   
         // Adjust the style of the lastDiv to ensure it can host the Ace editor properly
         lastDiv.style.width = '100%';
@@ -177,8 +181,8 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
   
         // Estimate the height based on the content
         const lineHeight = 16; // Height in pixels per line of text
-        const lines = 1 + content.split('\n').length || 1; // Adjusted to consider content properly
-        const calculatedHeight = `${lines * lineHeight}px`;
+        const lines = content.split('\n').length || 1; // Adjusted to consider content properly
+        const calculatedHeight = `${10 + lines * lineHeight}px`;
         lastDiv.style.height = calculatedHeight;
   
         // Initialize Ace editor on this div
@@ -193,6 +197,8 @@ import 'ace-builds/src-noconflict/theme-monokai.js'
         editor.setHighlightActiveLine(false); // Adjust based on your needs
         editor.setPrintMarginColumn(false); // Hide the print margin
         editor.renderer.$cursorLayer.element.style.display = "none"; // Hide the cursor
+        editor.setOption('showLineNumbers', false);
+        editor.setOption('highlightGutterLine', false);
   
         // After setting the value, adjust the editor's size to fit the content
         editor.container.style.height = calculatedHeight;
