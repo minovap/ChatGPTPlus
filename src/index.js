@@ -193,6 +193,8 @@ import 'ace-builds/src-noconflict/theme-chrome.js'
 
         // Mark the element as processed
         element.classList.add('injected');
+      } else {
+        element.textContent = textContent;
       }
 
       // Generate a random ID for the editor

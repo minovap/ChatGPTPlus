@@ -11,6 +11,7 @@ function PromptInput() {
   const [maxLines, setMaxLines] = useState(calculateMaxLines());
 
   const [codeContent, setCodeContent] = useState('');
+  const [focusedEditor, setFocusedEditor] = useState('');
   const [instructionsContent, setInstructionsContent] = useState('');
   const [hintContent, setHintContent] = useState('');
 
@@ -130,8 +131,11 @@ function PromptInput() {
 
   return (
     <div ref={thisComponentRef}>
-      <div className="header p-2 bg-gray-100 text-gray-800">Code</div>
+      <div className="header p-2 bg-gray-50 text-gray-800">Code</div>
       <AceEditor
+        className={focusedEditor === 'code_editor' ? 'focused' : ''}
+        onFocus={() => setFocusedEditor('code_editor')}
+        onBlur={() => setFocusedEditor('')}
         mode="javascript"
         theme="chrome"
         value={codeContent}
@@ -156,8 +160,11 @@ function PromptInput() {
           }
         ]}
       />
-      <div className="header p-2 bg-gray-100 text-gray-800 mt-4">Instructions</div>
+      <div className="header p-2 bg-gray-50 text-gray-800 mt-4">Instructions</div>
       <AceEditor
+        className={focusedEditor === 'instructions_editor' ? 'focused' : ''}
+        onFocus={() => setFocusedEditor('instructions_editor')}
+        onBlur={() => setFocusedEditor('')}
         mode="javascript"
         theme="chrome"
         value={instructionsContent}
@@ -182,8 +189,11 @@ function PromptInput() {
           }
         ]}
       />
-      <div className="header p-2 bg-gray-100 text-gray-800 mt-4">Hint</div>
+      <div className="header p-2 bg-gray-50 text-gray-800 mt-4">Hint</div>
       <AceEditor
+        className={focusedEditor === 'hint_editor' ? 'focused' : ''}
+        onFocus={() => setFocusedEditor('hint_editor')}
+        onBlur={() => setFocusedEditor('')}
         mode="javascript"
         theme="chrome"
         value={hintContent}

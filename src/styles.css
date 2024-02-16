@@ -47,3 +47,22 @@ html.input-left #prompt-textarea {
 [data-message-author-role="user"] .ace_print-margin {
     visibility: hidden !important;
 }
+
+.ace_editor.focused .ace_active-line {
+    background: rgba(0, 0, 0, 0.07) !important;
+}
+.ace_editor .ace_active-line {
+    background: transparent !important;
+}
+.ace_editor.focused .ace_gutter-active-line {
+    background: rgba(0, 0, 0, 0.07) !important;
+}
+.ace_editor .ace_gutter-active-line {
+    background: transparent !important;
+}
+.ace_editor.focused .ace_cursor-layer {
+    visibility: visible;
+}
+.ace_editor .ace_cursor-layer {
+    visibility: hidden;
+}
